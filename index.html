@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="page">
+        <div class="time_container">
+            <div class="time" id="time">11:27</div>
+        </div>
+
+        <div class="info_container">
+            <div style="display:flex; flex-direction: row; justify-content: center">
+                <div class="date" id="date">1月10日</div>
+                <div class="date" id="week" style="margin-left:5%">星期三</div>
+            </div>
+            <div id="Weather" class="weather_container">
+            </div>
+        </div>
+
+
+
+    </div>
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <script>
+        $.ajax({
+            type: 'GET',
+            url: 'https://www.tianqiapi.com/api/',
+            data: 'version=v1&city=杭州',
+            dataType: 'JSON',
+            error: function () {
+                alert('网络错误');
+            },
+            success: function (res) {
+                $('#Weather').append('<div> ' + res.city + ' : ' + res.data[0].wea + '</div>');
+            }
+        });
+        function update() {
+            var date = new Date()
+            var utc8DiffMinutes = date.getTimezoneOffset() + 480
+            date.setMinutes(date.getMinutes() + utc8DiffMinutes)
+
+            var timeString = date.getHours() + ':' + ('0' + date.getMinutes()).slice(-2)
+            var dateString = (date.getMonth() + 1) + '月' + date.getDate() + '日'
+            var weekList = ['日', '一', '二', '三', '四', '五', '六']
+            var weekString = '星期' + weekList[date.getDay()]
+
+            document.getElementById("time").innerHTML = timeString
+            document.getElementById("date").innerHTML = dateString
+            document.getElementById("week").innerHTML = weekString
+        }
+
+        update()
+        setInterval("update()", 60 * 1000)
+    </script>
+    <style>
+        body {
+            color: #000000;
+            background-color: #ffffff;
+        }
+
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .time_container,
+        .info_container,
+        .weather_container {
+            width: 100%;
+            margin: auto;
+            text-align: center;
+        }
+
+        .weather_container {
+            font-size: 4rem;
+        }
+
+        .time_container {
+            top: 0;
+            height: 45%;
+        }
+
+        .info_container {
+            height: 45%;
+            margin-top: 10%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+
+        .time {
+            padding-top: 120px;
+            font-size: 16rem;
+        }
+
+        .date {
+            display: flex;
+            justify-content: center;
+            font-size: 4rem;
+        }
+    </style>
+</body>
+
+</html>
